@@ -12,31 +12,31 @@ function getFormData($form){
 
 
 function sendData() {
-    var formData = new FormData();
-    console.log('sending data');
-
-    console.log(getFormData($('#contactForm')));
+    console.log('sending data 2');
+    var dataToSend = getFormData($('#contactForm'));
+    $('#contactFormSubmitButton').attr("disabled", true);
+    $('#contactFormSubmitButton').html("Submitting");
 
     $.ajax({
         url : 'https://aubl01ppu7.execute-api.eu-west-1.amazonaws.com/prod/contact',
         type : 'POST',
-        // data : {
-        //     name: "Donald Duck",
-        //     email: "Duckburg"
-        // },
         processData: false,  // tell jQuery not to process the data
-        // contentType: false,  // tell jQuery not to set contentType
-        contentType: 'application/json;charset=UTF-8',
+        contentType: 'application/json',
         dataType : 'json', // data type
-        data : getFormData($('#contactForm')),
+        data : JSON.stringify(dataToSend),
         success : function(data) {
-            console.log('success');
-            console.log(data);
-            alert(data);
+            console.log('contact request - success');
+            $('#contactFormSubmitButton').attr("disabled", true);
+            $('#contactFormSubmitButton').removeClass("btn-danger").addClass("btn-success");
+            $('#contactFormSubmitButton').removeClass("btn-primary").addClass("btn-success");
+            $('#contactFormSubmitButton').html("Submitted");
         },
         error : function(data) {
-            console.log('error');
+            console.log('contact request - error');
             console.log(data);
+            $('#contactFormSubmitButton').attr("disabled", false);
+            $('#contactFormSubmitButton').removeClass("btn-primary").addClass("btn-danger");
+            $('#contactFormSubmitButton').html("Submission Failed");
         },
     });
 
